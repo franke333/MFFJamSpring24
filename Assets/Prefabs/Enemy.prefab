@@ -43,7 +43,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1484798659572444145}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -81,10 +81,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.82
-  m_Height: 2.33
+  m_Radius: 1.47
+  m_Height: 2.96
   m_Direction: 1
-  m_Center: {x: 0, y: 0.05, z: 0}
+  m_Center: {x: 0, y: 0.16, z: 0}
 --- !u!114 &3518407645807551579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,9 +97,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df204fcb9d85f4947ada6499fd8c34db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 1
-  globalSpeed: 1
+  globalSpeed: 3
   speed: 1
+  health: 1
+  shroomTypeObj: {fileID: 0}
+  smallShroom: {fileID: 11400000, guid: c74722fd2aa496343aa27d832ead875a, type: 2}
 --- !u!1 &2806351151553048083
 GameObject:
   m_ObjectHideFlags: 0

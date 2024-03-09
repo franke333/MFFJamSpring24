@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 public class PlayerController : SingletonClass<PlayerController>
 {
@@ -21,6 +22,8 @@ public class PlayerController : SingletonClass<PlayerController>
     public Image weaponImage;
     private Vector2 weaponRectAnchor;
 
+    [SerializeField]
+    private TMP_Text ammoText, moneyText;
 
     // Update is called once per frame
 
@@ -29,7 +32,7 @@ public class PlayerController : SingletonClass<PlayerController>
     private void Start()
     {
         gm = GameManager.Instance;
-        weapon?.Init();
+        weapon.currentAmmo = 999999;
         weaponRectAnchor = weaponImage.rectTransform.anchoredPosition;
     }
 
@@ -38,7 +41,11 @@ public class PlayerController : SingletonClass<PlayerController>
         UpdateMove();
         UpdateCamera();
         Shoot();
+        UpdateUI();
     }
+
+    private float HalfScaledDeltaTime => (Time.unscaledDeltaTime + Time.deltaTime) / 2;
+    private float HalfTimeScale => (Time.timeScale + 1) / 2;
 
     void UpdateMove()
     {
@@ -53,7 +60,7 @@ public class PlayerController : SingletonClass<PlayerController>
         right.y = 0;
         right.Normalize();
 
-        transform.position += ((forward * v + right * h) * speed * gm.ScaledDeltaTime);
+        transform.position += ((forward * v + right * h) * speed * HalfScaledDeltaTime);
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, xBoundary.x, xBoundary.y),
             transform.position.y,
@@ -63,8 +70,8 @@ public class PlayerController : SingletonClass<PlayerController>
 
     void UpdateCamera()
     {
-        float mouseX = Input.GetAxisRaw("Mouse X") * sensitivityX;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivityY;
+        float mouseX = Input.GetAxisRaw("Mouse X") * sensitivityX * HalfTimeScale;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivityY * HalfTimeScale;
 
         zRotation -= mouseY;
         zRotation = Mathf.Clamp(zRotation,-80,80);
@@ -80,7 +87,7 @@ public class PlayerController : SingletonClass<PlayerController>
 
     private void Shoot()
     {
-        weapon.currentCooldown -= GameManager.Instance.ScaledDeltaTime;
+        weapon.currentCooldown -= Time.deltaTime;
         if (Input.GetMouseButton(0) && weapon != null)
             if(weapon.Shoot(shootpoint))
                     ShakeWeapon();
@@ -93,6 +100,15 @@ public class PlayerController : SingletonClass<PlayerController>
             .Append(weaponImage.rectTransform.DOAnchorPos(weaponRectAnchor, 0.25f))
             .Play();
 
+    }
+
+    // ----------
+    // UI
+    // ----------
+
+    private void UpdateUI()
+    {
+        ammoText.text = $"{weapon.currentAmmo} / {weapon.ammoPerPack}";
     }
 
 

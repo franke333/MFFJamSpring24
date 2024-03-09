@@ -22,8 +22,8 @@ public class BulletScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       rb.velocity = direction * speed * gm.timeScale;
-        lifeTime -= gm.ScaledDeltaTime;
+        rb.velocity = direction * speed;
+        lifeTime -= Time.deltaTime;
         if (lifeTime < 0)
         {
             Destroy(gameObject);

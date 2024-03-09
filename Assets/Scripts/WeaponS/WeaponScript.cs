@@ -9,7 +9,9 @@ public class WeaponScript : ScriptableObject
     public Sprite sprite;
     public BulletScript bulletPrefab;
 
-    public int maxAmmo = 10;
+    public int ammoPerPack = 10;
+    public int costPerPack = 10;
+    [HideInInspector]
     public int currentAmmo;
     public float shootCooldown = 0.5f;
     public float currentCooldown = 0f;
@@ -18,11 +20,6 @@ public class WeaponScript : ScriptableObject
 
     public float accuracy = 1f;
     public float bulletSpeed = 10f;
-
-    public void Init()
-    {
-        currentAmmo = maxAmmo;
-    }
 
     public bool Shoot(Transform shootPoint)
     {
@@ -33,7 +30,7 @@ public class WeaponScript : ScriptableObject
             currentAmmo--;
 
             float angle = Random.Range(0,2*Mathf.PI);
-            Vector3 spread = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
+            Vector3 spread = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0);
             float acc = Random.Range(0,1 - accuracy);
             var direction = (shootPoint.forward + spread * acc).normalized;
 

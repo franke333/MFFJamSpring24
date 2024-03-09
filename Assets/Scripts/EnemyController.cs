@@ -1,35 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.IO.LowLevel.Unsafe;
-using Unity.VisualScripting;
+using DG.Tweening;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public float health = 1;
+    
     public float globalSpeed = 1;
     [Header("Mushrrom Type")]
     public float speed = 1;
+    public float health = 1;
+    public ShroomTypeObject shroomTypeObj;
+
+    public ShroomTypeObject smallShroom;
+
 
     GameManager gm;
     Rigidbody rb;
 
+    SpriteRenderer sr;
+
     private int _frames = 0;
 
+    public void Init() => Start();
     // Start is called before the first frame update
     void Start()
     {
         gm = GameManager.Instance;
         rb = GetComponent<Rigidbody>();
+        sr = GetComponentInChildren<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //move towards gm.Target
-        Vector3 direction = (gm.Target.transform.position - transform.position).normalized;
+        if(transform.position.y < -100)
+        {
+            Kill();
+            return;
+        }
+        Vector3 direction = (gm.Target.transform.position - transform.position);
         direction.y = 0;
-        rb.velocity = direction * speed * globalSpeed * gm.timeScale + rb.velocity.y * Vector3.up;
+        direction.Normalize();
+        rb.velocity = direction * (speed + globalSpeed)/2 + rb.velocity.y * Vector3.up;
         _frames++;
         if (_frames > 10)
         {
@@ -41,29 +53,64 @@ public class EnemyController : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if(!gameObject.activeSelf) 
+            return;
         health -= damage;
+        DG.Tweening.Sequence s = DOTween.Sequence();
+        s.Append(sr.DOColor(Color.red, 0.1f));
+        s.Append(sr.DOColor(Color.white, 0.1f));
+
         if (health <= 0)
         {
+            gameObject.SetActive(false);
             Kill();
         }
     }
 
-    protected virtual bool IsInRange() => gm.InRed(transform.position);
+    protected bool IsInRange() => shroomTypeObj.type.IsRanged() ? gm.InGreen(transform.position) :  gm.InRed(transform.position);
 
     public void Kill()
     {
+
+        if (IsInRange())
+        {
+            gm.DestoryShroom(this);
+            return;
+        }
+
+
+        if (shroomTypeObj.type == ShroomTypeObject.ShroomType.Split)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                Vector3 pos = transform.position + new Vector3(Random.Range(-1, 1), 1f, Random.Range(-1, 1)) * 0.5f;
+                gm.SpawnShroomAt(pos, smallShroom);
+            }
+        }
+        else if (shroomTypeObj.type == ShroomTypeObject.ShroomType.Boom)
+        {
+            //TODO boom
+        }
         gm.DestoryShroom(this);
     }
 
-    protected virtual void OnRangeEntered()
+    protected void OnRangeEntered()
     {
-        gm.TakeDamage();
-        Kill();
+        if (shroomTypeObj.type.IsMelee())
+        {
+            gm.TakeDamage();
+            Kill();
+            return;
+        }
+
+
     }
 
-    private void Bind(ShroomTypeObject shroom)
+    public void Bind(ShroomTypeObject shroom)
     {
         speed = shroom.speed;
         health = shroom.health;
+        shroomTypeObj = shroom;
+        sr.sprite = shroom.sprite;
     }
 }
