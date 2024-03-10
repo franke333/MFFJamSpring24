@@ -34,6 +34,7 @@ public class PlayerController : SingletonClass<PlayerController>
         gm = GameManager.Instance;
         weapon.currentAmmo = 999999;
         weaponRectAnchor = weaponImage.rectTransform.anchoredPosition;
+        weaponImage.sprite = weapon.sprite;
     }
 
     void Update()
@@ -109,6 +110,7 @@ public class PlayerController : SingletonClass<PlayerController>
     private void UpdateUI()
     {
         ammoText.text = $"{weapon.currentAmmo} / {weapon.ammoPerPack}";
+        moneyText.text = $"${MoneyManager.Instance.money}";
     }
 
 

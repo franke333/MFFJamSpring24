@@ -17,6 +17,7 @@ public class GameManager : SingletonClass<GameManager>
     [SerializeField]
     private EnemyController _enemyPrefab;
     private List<EnemyController> _inactiveEnemyPool = new List<EnemyController>();
+    public HashSet<EnemyController> aliveEnemies = new HashSet<EnemyController>();
     public List<ShroomTypeObject> shroomTypes;
     private Queue<ShroomTypeObject> spawnQueue = new Queue<ShroomTypeObject>();
 
@@ -25,6 +26,7 @@ public class GameManager : SingletonClass<GameManager>
     [Header("Objects")]
     public GameObject Target;
     public GameObject Tower;
+    public ExplosionScript ExplosionPrefab;
 
     [Header("Spawning")]
     public Vector2 spawnRange = new Vector2(25, 30);
@@ -56,7 +58,9 @@ public class GameManager : SingletonClass<GameManager>
 
     private void Update()
     {
+        
         Time.timeScale = Mathf.Lerp(Time.timeScale, GetScaleByDanger(),Time.unscaledDeltaTime);
+        closestShroom += 1f;
         _timeText.text = "x" + Time.timeScale.ToString("F2");
         _shroomsText.text = "Shrooms: " + shroomsAlive.ToString();
         //Time.timeScale = Mathf.Sin(Time.unscaledTime/8)+1.1f;
@@ -67,6 +71,10 @@ public class GameManager : SingletonClass<GameManager>
                 AddToSpawnQueue(null);
         }
 
+        //If not in wave
+        if (Input.GetKey(KeyCode.K))
+            MoneyManager.Instance.CollectX(5);
+
         //Update tower height
         Tower.transform.position = new Vector3(
             Tower.transform.position.x,
@@ -76,11 +84,13 @@ public class GameManager : SingletonClass<GameManager>
     }
 
     private float GetScaleByDanger() { 
-        if(closestShroom < 10)
+        if(shroomsAlive == 0)
+            return 2;
+        if(closestShroom < 16)
             return 0.25f;
-        if(closestShroom < 20)
+        if(closestShroom < 32)
             return 0.65f;
-        if(closestShroom < 75)
+        if(closestShroom < 96)
             return 1;
         return 2;
     }
@@ -121,6 +131,7 @@ public class GameManager : SingletonClass<GameManager>
         shroom.transform.parent = _pool;
         shroom.gameObject.SetActive(false);
         shroomsAlive--;
+        aliveEnemies.Remove(shroom);
     }
 
     public bool InRed(Vector3 position)
@@ -157,6 +168,7 @@ public class GameManager : SingletonClass<GameManager>
                 Mathf.Sin(angle * Mathf.Deg2Rad) * distance
                 );
             SpawnShroomAt(position + new Vector3(Tower.transform.position.x, 0, Tower.transform.position.z),shroom);
+           
 
         }
     }
@@ -170,7 +182,7 @@ public class GameManager : SingletonClass<GameManager>
         enemy.transform.position = position;
         enemy.gameObject.SetActive(true);
         enemy.transform.parent = null;
-
+        aliveEnemies.Add(enemy);
         shroomsAlive++;
     }
 

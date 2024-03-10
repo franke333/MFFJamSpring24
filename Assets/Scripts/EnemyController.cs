@@ -89,8 +89,10 @@ public class EnemyController : MonoBehaviour
         }
         else if (shroomTypeObj.type == ShroomTypeObject.ShroomType.Boom)
         {
-            //TODO boom
+            var expl = Instantiate(gm.ExplosionPrefab, transform.position, Quaternion.identity);
+            expl.Explode(35, 50, 20);
         }
+        MoneyManager.Instance.SummonMoneyAt(transform.position, shroomTypeObj.value);
         gm.DestoryShroom(this);
     }
 
@@ -112,5 +114,6 @@ public class EnemyController : MonoBehaviour
         health = shroom.health;
         shroomTypeObj = shroom;
         sr.sprite = shroom.sprite;
+        sr.flipX = Random.Range(0, 2) == 0;
     }
 }

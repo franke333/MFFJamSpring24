@@ -13,10 +13,18 @@ public class BulletScript : MonoBehaviour
 
     public float lifeTime = 10f;
 
+    private bool dead;
+
+    public bool explosion;
+    public float explosionSize;
+    public float explosionRange15;
+    public float explosionRange1;
+
     private void Start()
     {
         gm = GameManager.Instance;
         rb = GetComponent<Rigidbody>();
+        dead = false;
     }
 
     // Update is called once per frame
@@ -32,9 +40,17 @@ public class BulletScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (dead)
+            return;
+        dead = true;
         if(collision.gameObject.CompareTag("enemy"))
         {
             collision.gameObject.GetComponent<EnemyController>().TakeDamage(1);
+        }
+        if(explosion)
+        {
+            Instantiate(gm.ExplosionPrefab,transform.position,Quaternion.identity)
+                .Explode(explosionSize, explosionRange15, explosionRange1);
         }
         Destroy(gameObject);
     }

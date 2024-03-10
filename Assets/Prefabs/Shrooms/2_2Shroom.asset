@@ -15,6 +15,6 @@ MonoBehaviour:
   shroomName: hrib
   sprite: {fileID: 21300000, guid: 02ea72a9c339ad84f9ecb2f509f666f3, type: 3}
   health: 2
-  speed: 3
-  value: 0
+  speed: 2
+  value: 8
   type: 0

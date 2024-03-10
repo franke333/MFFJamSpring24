@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7819e77f00c9db542928166d76f23842, type: 3}
   m_Name: 2Pistol
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 79a3d260accc31344b6be9ba9067e42b, type: 3}
+  sprite: {fileID: 21300000, guid: 72519cc42c30b8243a0e328a1e0661fa, type: 3}
   bulletPrefab: {fileID: 551972521905007305, guid: 9da0eeec7dfdb0345862ef325ee42e42, type: 3}
   ammoPerPack: 20
   costPerPack: 30
