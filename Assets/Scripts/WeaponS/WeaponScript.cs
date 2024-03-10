@@ -11,7 +11,7 @@ public class WeaponScript : ScriptableObject
 
     public int ammoPerPack = 10;
     public int costPerPack = 10;
-    [HideInInspector]
+
     public int currentAmmo;
     public float shootCooldown = 0.5f;
     public float currentCooldown = 0f;

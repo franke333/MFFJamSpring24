@@ -12,7 +12,7 @@ public class MoneyManager : SingletonClass<MoneyManager>
 
     public List<MoneyScript> moneys = new List<MoneyScript>();
     public List<MoneyScript> _pool = new List<MoneyScript>();
-    public int money = 0;
+    public int money = 100;
 
     private void Start()
     {

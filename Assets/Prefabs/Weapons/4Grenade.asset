@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: d6f1b5e1598236b42871d36293ab9caa, type: 3}
   bulletPrefab: {fileID: 551972521905007305, guid: 8f10f1524f695864fbb80d2cbebef4ff, type: 3}
-  ammoPerPack: 5
-  costPerPack: 250
-  currentAmmo: 999996
+  ammoPerPack: 1
+  costPerPack: 20
+  currentAmmo: 100
   shootCooldown: 1.5
-  currentCooldown: -2.265275
+  currentCooldown: -3.9666219
   shakeMultiplier: 1
   accuracy: 0.98
-  bulletSpeed: 20
+  bulletSpeed: 35

@@ -18,23 +18,31 @@ public class PlayerController : SingletonClass<PlayerController>
     [SerializeField]
     Transform shootpoint;
 
-    public WeaponScript weapon;
+    public int weaponIndex = 0;
+
+    public WeaponScript Weapon => weapons[weaponIndex];
+
     public Image weaponImage;
     private Vector2 weaponRectAnchor;
+
+    public List<WeaponScript> weapons;
 
     [SerializeField]
     private TMP_Text ammoText, moneyText;
 
-    // Update is called once per frame
+    float confusionDuration = 0, slowDuration = 0;
+
+    bool isConfused => confusionDuration > 0;
+    bool isSlowed => slowDuration > 0;
+
+    public bool autoBuyAmmo = true;
 
     float zRotation,yRotation;
 
     private void Start()
     {
         gm = GameManager.Instance;
-        weapon.currentAmmo = 999999;
         weaponRectAnchor = weaponImage.rectTransform.anchoredPosition;
-        weaponImage.sprite = weapon.sprite;
     }
 
     void Update()
@@ -43,7 +51,13 @@ public class PlayerController : SingletonClass<PlayerController>
         UpdateCamera();
         Shoot();
         UpdateUI();
+        SelectWeapon();
+        confusionDuration -= Time.deltaTime;
+        slowDuration -= Time.deltaTime;
     }
+
+    public void Confuse() => confusionDuration = 4;
+    public void Slow() => slowDuration = 4;
 
     private float HalfScaledDeltaTime => (Time.unscaledDeltaTime + Time.deltaTime) / 2;
     private float HalfTimeScale => (Time.timeScale + 1) / 2;
@@ -61,6 +75,12 @@ public class PlayerController : SingletonClass<PlayerController>
         right.y = 0;
         right.Normalize();
 
+        if(isConfused && Time.unscaledTime % 6 >=3)
+        {
+            forward *= -1;
+            right *= -1;
+        }
+
         transform.position += ((forward * v + right * h) * speed * HalfScaledDeltaTime);
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, xBoundary.x, xBoundary.y),
@@ -74,6 +94,13 @@ public class PlayerController : SingletonClass<PlayerController>
         float mouseX = Input.GetAxisRaw("Mouse X") * sensitivityX * HalfTimeScale;
         float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivityY * HalfTimeScale;
 
+        if(isConfused && Time.unscaledTime % 6 < 3)
+        {
+            float temp = mouseX;
+            mouseX = mouseY;
+            mouseY = temp;
+        }
+
         zRotation -= mouseY;
         zRotation = Mathf.Clamp(zRotation,-80,80);
         yRotation += mouseX;
@@ -86,21 +113,63 @@ public class PlayerController : SingletonClass<PlayerController>
     // Weapon
     // ----------
 
+    private void BuyAmmo()
+    {
+        if(MoneyManager.Instance.money >= Weapon.costPerPack)
+        {
+            MoneyManager.Instance.money -= Weapon.costPerPack;
+            Weapon.currentAmmo += Weapon.ammoPerPack;
+        }
+    }
+
     private void Shoot()
     {
-        weapon.currentCooldown -= Time.deltaTime;
-        if (Input.GetMouseButton(0) && weapon != null)
-            if(weapon.Shoot(shootpoint))
-                    ShakeWeapon();
+        Weapon.currentCooldown -= Time.deltaTime * (isSlowed ? 0.33f : 1f);
+        if (Input.GetMouseButton(0))
+        {
+            if (Weapon.currentAmmo <= 0 && autoBuyAmmo)
+                BuyAmmo();
+            if (Weapon.Shoot(shootpoint))
+                ShakeWeapon();
+        }
     }
 
     private void ShakeWeapon()
     {
         DOTween.Sequence()
-            .Append(weaponImage.rectTransform.DOShakeAnchorPos(0.25f, 0.1f * weapon.shakeMultiplier, 10, 90, false))
+            .Append(weaponImage.rectTransform.DOShakeAnchorPos(0.25f, 0.1f * Weapon.shakeMultiplier, 10, 90, false))
             .Append(weaponImage.rectTransform.DOAnchorPos(weaponRectAnchor, 0.25f))
             .Play();
 
+    }
+
+    private void SelectWeapon()
+    {
+        int prevIndex = weaponIndex;
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+            weaponIndex = 0;
+        if(Input.GetKeyDown(KeyCode.Alpha2))
+            weaponIndex = 1;
+        if(Input.GetKeyDown(KeyCode.Alpha3))
+            weaponIndex = 2;
+        if(Input.GetKeyDown(KeyCode.Alpha4))
+            weaponIndex = 3;
+        if(Input.GetKeyDown(KeyCode.Alpha5))
+            weaponIndex = 4;
+        if(Input.GetKeyDown(KeyCode.Alpha6))
+            weaponIndex = 5;
+
+        if(Input.GetKeyDown(KeyCode.Q))
+            weaponIndex = (weaponIndex -1) % weapons.Count;
+        if(Input.GetKeyDown(KeyCode.E))
+            weaponIndex = (weaponIndex +1) % weapons.Count;
+        if(prevIndex != weaponIndex)
+            WeaponChange();
+    }
+
+    private void WeaponChange()
+    {
+        weaponImage.sprite = Weapon.sprite;
     }
 
     // ----------
@@ -109,7 +178,7 @@ public class PlayerController : SingletonClass<PlayerController>
 
     private void UpdateUI()
     {
-        ammoText.text = $"{weapon.currentAmmo} / {weapon.ammoPerPack}";
+        ammoText.text = $"{Weapon.currentAmmo}  (${Weapon.costPerPack} | {Weapon.ammoPerPack})";
         moneyText.text = $"${MoneyManager.Instance.money}";
     }
 

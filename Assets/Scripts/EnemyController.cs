@@ -20,6 +20,9 @@ public class EnemyController : MonoBehaviour
 
     private int _frames = 0;
 
+    private bool shooting = false;
+    private float cooldown = 2.5f;
+
     public void Init() => Start();
     // Start is called before the first frame update
     void Start()
@@ -36,6 +39,17 @@ public class EnemyController : MonoBehaviour
         if(transform.position.y < -100)
         {
             Kill();
+            return;
+        }
+        if (shooting)
+        {
+            rb.velocity = Vector3.zero;
+            cooldown -= Time.deltaTime;
+            if (cooldown < 0)
+            {
+                Instantiate(shroomTypeObj.projectilePrefab, transform.position, Quaternion.identity);
+                cooldown = Random.Range(5f,10f);
+            }
             return;
         }
         Vector3 direction = (gm.Target.transform.position - transform.position);
@@ -104,6 +118,7 @@ public class EnemyController : MonoBehaviour
             Kill();
             return;
         }
+        shooting = true;
 
 
     }

@@ -21,7 +21,7 @@ public class ShroomTypeObject : ScriptableObject
     public int value;
     public ShroomType type;
 
-    
+    public GameObject projectilePrefab;
 }
 
 public static class ShroomTypeExt

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d140df65d33f88649bf4f4a5a7a69ef0, type: 3}
-  m_Name: ConfuseShroom
+  m_Name: SlowShroom
   m_EditorClassIdentifier: 
   shroomName: hrib
-  sprite: {fileID: 21300000, guid: 03d7d183622f6b944ad6f91cbcb4d291, type: 3}
+  sprite: {fileID: 21300000, guid: 74a780d6d1b024348b42a43c11c40663, type: 3}
   health: 1
   speed: 1
   value: 45
-  type: 5
-  projectilePrefab: {fileID: 8113302675068748292, guid: 42d1950bb8bfc0e4fb86f5f6dda5dc81, type: 3}
+  type: 4
+  projectilePrefab: {fileID: 8113302675068748292, guid: 74023424e8e29144d89282bc2317391f, type: 3}
