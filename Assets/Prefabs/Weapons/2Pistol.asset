@@ -15,7 +15,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 72519cc42c30b8243a0e328a1e0661fa, type: 3}
   bulletPrefab: {fileID: 551972521905007305, guid: 9da0eeec7dfdb0345862ef325ee42e42, type: 3}
   ammoPerPack: 20
-  costPerPack: 20
+  costPerPack: 10
   currentAmmo: 0
   shootCooldown: 0.5
   currentCooldown: -2.2405624

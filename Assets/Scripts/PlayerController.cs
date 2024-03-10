@@ -35,12 +35,16 @@ public class PlayerController : SingletonClass<PlayerController>
     bool isConfused => confusionDuration > 0;
     bool isSlowed => slowDuration > 0;
 
-    public bool autoBuyAmmo = true;
+    public bool autoBuyAmmo = false;
 
     float zRotation,yRotation;
 
+    Vector3 cameraPos;
+
     private void Start()
     {
+        autobuyText.text = autoBuyAmmo ? "Auto[B]uy: ON" : "Auto[B]uy: OFF";
+        cameraPos = Camera.main.transform.localPosition;
         gm = GameManager.Instance;
         weaponRectAnchor = weaponImage.rectTransform.anchoredPosition;
         zRotation = 0;
@@ -64,6 +68,15 @@ public class PlayerController : SingletonClass<PlayerController>
             autoBuyAmmo = !autoBuyAmmo;
             autobuyText.text = autoBuyAmmo ? "Auto[B]uy: ON" : "Auto[B]uy: OFF";
         }
+    }
+
+    public void ShakeCamera(float intensity, float duration)
+    {
+        DOTween.Sequence()
+            .Append(Camera.main.transform.DOShakePosition(duration, intensity))
+            .Append(Camera.main.transform.DOLocalMove(cameraPos, duration))
+            .OnComplete(() => Camera.main.transform.localPosition = cameraPos)
+            .Play();
     }
 
     public void Confuse() => confusionDuration = 4;
@@ -127,6 +140,7 @@ public class PlayerController : SingletonClass<PlayerController>
     {
         if(MoneyManager.Instance.money >= Weapon.costPerPack)
         {
+            AudioManager.Instance.buySource.Play();
             MoneyManager.Instance.money -= Weapon.costPerPack;
             Weapon.currentAmmo += Weapon.ammoPerPack;
         }
@@ -180,6 +194,7 @@ public class PlayerController : SingletonClass<PlayerController>
     private void WeaponChange()
     {
         weaponImage.sprite = Weapon.sprite;
+        AudioManager.Instance.gunSwitchSource.Play();
     }
 
     // ----------

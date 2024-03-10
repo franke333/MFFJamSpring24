@@ -35,6 +35,10 @@ public class LevelManager : SingletonClass<LevelManager>
 
     public AudioClip endlessmusic;
 
+    public GameObject WinScreen;
+
+    Material skybox;
+
     GameManager gm;
 
     private void Start()
@@ -62,9 +66,13 @@ public class LevelManager : SingletonClass<LevelManager>
         else
             wave = waves[currentWave];
 
-        //AUDIO
-        if(wave.tint.a != 0)
-            RenderSettings.skybox.color = wave.tint;
+        if (wave.clip != null)
+            AudioManager.Instance.PlayMusic(wave.clip);
+        else
+            AudioManager.Instance.PlayMusic();
+
+        if (wave.tint.a != 0)
+            RenderSettings.skybox.SetColor("_Tint", wave.tint);
 
         shroomsToSpawn = new List<ShroomTypeObject>();
         for (int i = 0; i < wave.basicShrooms; i++)
@@ -88,7 +96,7 @@ public class LevelManager : SingletonClass<LevelManager>
     private void UpdateWave()
     {
         currentOffset += Time.deltaTime;
-        if (currentOffset < wave.waveSpawnOffset || shroomsToSpawn.Count == 0)
+        if (shroomsToSpawn.Count == 0 || currentOffset < wave.waveSpawnOffset )
             return;
 
         currentOffset = 0;
@@ -104,7 +112,17 @@ public class LevelManager : SingletonClass<LevelManager>
 
     public bool IsWaveFinished()
     {
+        var prev = waveActive;
         waveActive = shroomsToSpawn.Count != 0 || GameManager.Instance.shroomsAlive != 0;
+        if(prev && !waveActive)
+        {
+            if(currentWave == waves.Count - 1)
+            {
+                WinScreen.SetActive(true);
+            }
+            AudioManager.Instance.levelFInishedSource.Play();
+            AudioManager.Instance.StopMusic();
+        }
         return !waveActive;
     }
 

@@ -8,6 +8,8 @@ public class AlwaysFaceCameraScript : MonoBehaviour
 
     public Camera mainCamera;
 
+    public float ratio = 1;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,7 +20,7 @@ public class AlwaysFaceCameraScript : MonoBehaviour
     {
         transform.LookAt(new Vector3(
             mainCamera.transform.position.x,
-            (transform.position.y + mainCamera.transform.position.y)/2,
+            (transform.position.y + ratio*mainCamera.transform.position.y)/(1+ratio),
             mainCamera.transform.position.z
             ));
     }

@@ -16,5 +16,6 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 8e417483be14e084f9dd5d25f0f18b29, type: 3}
   health: 1
   speed: 3.5
-  value: 45
+  value: 5
   type: 0
+  projectilePrefab: {fileID: 0}

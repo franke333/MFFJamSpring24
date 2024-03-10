@@ -45,12 +45,16 @@ public class BulletScript : MonoBehaviour
         dead = true;
         if (collision.gameObject.CompareTag("button"))
         {
+            AudioManager.Instance.shotLandHitSource.Play();
             LevelManager.Instance.PrepareWave();
         }
-        if(collision.gameObject.CompareTag("enemy"))
+        else if(collision.gameObject.CompareTag("enemy"))
         {
-            collision.gameObject.GetComponent<EnemyController>().TakeDamage(1);
+            AudioManager.Instance.shotLandHitSource.Play();
+            collision.gameObject.GetComponent<EnemyController>().TakeDamage(explosion ? 5 : 1);
         }
+        else
+            AudioManager.Instance.shotLandMissSource.Play();
         if(explosion)
         {
             Instantiate(gm.ExplosionPrefab,transform.position,Quaternion.identity)

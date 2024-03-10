@@ -1,6 +1,4 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MoneyScript : MonoBehaviour
@@ -42,6 +40,8 @@ public class MoneyScript : MonoBehaviour
 
     public void Collect()
     {
+        if(!AudioManager.Instance.earnMoneySource.isPlaying)
+            AudioManager.Instance.earnMoneySource.Play();
         MoneyManager.Instance.money+=value;
         gameObject.SetActive(false);
         value = 0;

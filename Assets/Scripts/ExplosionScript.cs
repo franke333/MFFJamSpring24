@@ -10,6 +10,7 @@ public class ExplosionScript : MonoBehaviour
 
     public void Explode(float size, float range15, float range1)
     {
+        AudioManager.Instance.explosionSource.Play();
         transform.localScale = new Vector3(size, size, size);
         List<EnemyController> inRange1 = new List<EnemyController>();
         foreach (var enemy in GameManager.Instance.aliveEnemies)

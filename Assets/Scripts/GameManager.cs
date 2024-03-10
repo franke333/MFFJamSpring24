@@ -1,10 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class GameManager : SingletonClass<GameManager>
 {
@@ -71,7 +68,7 @@ public class GameManager : SingletonClass<GameManager>
         Time.timeScale = Mathf.Lerp(Time.timeScale, GetScaleByDanger(),Time.unscaledDeltaTime);
         closestShroom += 1f;
         _timeText.text = "x" + Time.timeScale.ToString("F2");
-        _shroomsText.text = "Shrooms: " + shroomsAlive.ToString();
+        _shroomsText.text = "Wave: " + (LevelManager.Instance.currentWave + 1) + "\nShrooms: " + shroomsAlive.ToString();
 
         SpawnFromQueue(3);
         if (LevelManager.Instance.IsWaveFinished())
@@ -89,9 +86,9 @@ public class GameManager : SingletonClass<GameManager>
         if(shroomsAlive == 0)
             return 2;
         if(closestShroom < 16)
-            return 0.25f;
+            return 0.33f;
         if(closestShroom < 32)
-            return 0.6f;
+            return 0.66f;
         if(closestShroom < 64)
             return 1;
         return 2;
@@ -186,6 +183,15 @@ public class GameManager : SingletonClass<GameManager>
         enemy.transform.parent = null;
         aliveEnemies.Add(enemy);
         shroomsAlive++;
+        if (enemy.shroomTypeObj.type == ShroomTypeObject.ShroomType.BOSS)
+        {
+            enemy.transform.localScale = Vector3.one * 100;
+            enemy.transform.position += Vector3.up * 100;
+            Vector3 playerDir = (Target.transform.position - enemy.transform.position).normalized;
+            enemy.transform.position += -playerDir * 200;
+            enemy.GetComponentInChildren<AlwaysFaceCameraScript>()
+                .ratio = 0.1f;
+        }
     }
 
 
@@ -200,10 +206,12 @@ public class GameManager : SingletonClass<GameManager>
     public void TakeDamage()
     {
         health--;
+        PlayerController.Instance.ShakeCamera(0.3f, 0.8f);
         if (health == 0)
         {
             Tower.transform.Find("Player").parent = null;
             Tower.SetActive(false);
+            SceneManager.LoadScene("GameOver");
             Debug.Log("Game Over");
         }
     }
