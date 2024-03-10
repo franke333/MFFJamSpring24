@@ -148,6 +148,9 @@ MonoBehaviour:
   zBoundary: {x: 0.96, y: 4}
   shootpoint: {fileID: 0}
   weapon: {fileID: 0}
+  weaponImage: {fileID: 0}
+  ammoText: {fileID: 0}
+  moneyText: {fileID: 0}
 --- !u!54 &3161039702221890983
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -437,7 +440,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
