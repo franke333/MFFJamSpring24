@@ -17,4 +17,5 @@ MonoBehaviour:
   health: 2
   speed: 2
   value: 1
-  type: 1
+  type: 2
+  projectilePrefab: {fileID: 0}

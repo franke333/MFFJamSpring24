@@ -43,6 +43,10 @@ public class BulletScript : MonoBehaviour
         if (dead)
             return;
         dead = true;
+        if (collision.gameObject.CompareTag("button"))
+        {
+            LevelManager.Instance.PrepareWave();
+        }
         if(collision.gameObject.CompareTag("enemy"))
         {
             collision.gameObject.GetComponent<EnemyController>().TakeDamage(1);

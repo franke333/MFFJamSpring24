@@ -17,5 +17,5 @@ MonoBehaviour:
   health: 1
   speed: 1
   value: 45
-  type: 5
+  type: 4
   projectilePrefab: {fileID: 8113302675068748292, guid: 42d1950bb8bfc0e4fb86f5f6dda5dc81, type: 3}

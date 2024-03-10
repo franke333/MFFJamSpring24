@@ -28,7 +28,7 @@ public class PlayerController : SingletonClass<PlayerController>
     public List<WeaponScript> weapons;
 
     [SerializeField]
-    private TMP_Text ammoText, moneyText;
+    private TMP_Text ammoText, moneyText, autobuyText;
 
     float confusionDuration = 0, slowDuration = 0;
 
@@ -43,6 +43,9 @@ public class PlayerController : SingletonClass<PlayerController>
     {
         gm = GameManager.Instance;
         weaponRectAnchor = weaponImage.rectTransform.anchoredPosition;
+        zRotation = 0;
+        yRotation = 0;
+        WeaponChange();
     }
 
     void Update()
@@ -54,6 +57,13 @@ public class PlayerController : SingletonClass<PlayerController>
         SelectWeapon();
         confusionDuration -= Time.deltaTime;
         slowDuration -= Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.Space))
+            BuyAmmo();
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            autoBuyAmmo = !autoBuyAmmo;
+            autobuyText.text = autoBuyAmmo ? "Auto[B]uy: ON" : "Auto[B]uy: OFF";
+        }
     }
 
     public void Confuse() => confusionDuration = 4;
@@ -160,7 +170,7 @@ public class PlayerController : SingletonClass<PlayerController>
             weaponIndex = 5;
 
         if(Input.GetKeyDown(KeyCode.Q))
-            weaponIndex = (weaponIndex -1) % weapons.Count;
+            weaponIndex = (weaponIndex +5) % weapons.Count;
         if(Input.GetKeyDown(KeyCode.E))
             weaponIndex = (weaponIndex +1) % weapons.Count;
         if(prevIndex != weaponIndex)

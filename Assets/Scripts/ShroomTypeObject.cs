@@ -7,12 +7,12 @@ public class ShroomTypeObject : ScriptableObject
 {
     public enum ShroomType
     {
-        Melee,
-        Split,
-        Boom,
-        Blind,
-        Slow,
-        Confuse,
+        Melee, //0,1,Tank 2
+        Boom, //3
+        Split, //4
+        Slow, //5
+        Confuse, //6
+        BOSS
     }
     public string shroomName;
     public Sprite sprite;
@@ -28,7 +28,7 @@ public static class ShroomTypeExt
 {
     public static bool IsRanged(this ShroomTypeObject.ShroomType type)
     {
-        return type == ShroomTypeObject.ShroomType.Blind || type == ShroomTypeObject.ShroomType.Confuse || type == ShroomTypeObject.ShroomType.Slow;
+        return type == ShroomTypeObject.ShroomType.Confuse || type == ShroomTypeObject.ShroomType.Slow;
     }
     public static bool IsMelee(this ShroomTypeObject.ShroomType type) => !IsRanged(type);
 }

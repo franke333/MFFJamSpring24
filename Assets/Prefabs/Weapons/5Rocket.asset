@@ -18,7 +18,7 @@ MonoBehaviour:
   costPerPack: 50
   currentAmmo: 100
   shootCooldown: 1
-  currentCooldown: -5.899106
+  currentCooldown: -2.7002993
   shakeMultiplier: 2
   accuracy: 1
   bulletSpeed: 80

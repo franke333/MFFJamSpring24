@@ -12,13 +12,14 @@ public class GameManager : SingletonClass<GameManager>
     [SerializeField]
     private float redRadius = 5,greenRadius = 15;
 
-    public int health = 5;
+    public int health = 1;
 
     [SerializeField]
     private EnemyController _enemyPrefab;
     private List<EnemyController> _inactiveEnemyPool = new List<EnemyController>();
     public HashSet<EnemyController> aliveEnemies = new HashSet<EnemyController>();
     public List<ShroomTypeObject> shroomTypes;
+    public ShroomTypeObject BOSS;
     private Queue<ShroomTypeObject> spawnQueue = new Queue<ShroomTypeObject>();
 
     private Transform _pool;
@@ -31,16 +32,24 @@ public class GameManager : SingletonClass<GameManager>
     [Header("Spawning")]
     public Vector2 spawnRange = new Vector2(25, 30);
 
+    public List<GameObject> TurnOffOnStart;
+
     [SerializeField]
     float _towerHeightStart = 3, _towerDamage = 1.5f;
 
     [SerializeField]
     TMP_Text _shroomsText,_timeText;
 
-    int shroomsAlive = 0;
+    public int shroomsAlive = 0;
 
     float closestShroom = 1000;
 
+    public void StartLevel()
+    {
+        health = 5;
+        foreach (var obj in TurnOffOnStart)
+            obj.SetActive(false);
+    }
 
     private void Start()
     {
@@ -63,17 +72,10 @@ public class GameManager : SingletonClass<GameManager>
         closestShroom += 1f;
         _timeText.text = "x" + Time.timeScale.ToString("F2");
         _shroomsText.text = "Shrooms: " + shroomsAlive.ToString();
-        //Time.timeScale = Mathf.Sin(Time.unscaledTime/8)+1.1f;
-        SpawnFromQueue(1);
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            for (int i = 0;i < 10; i++)
-                AddToSpawnQueue(null);
-        }
 
-        //If not in wave
-        if (Input.GetKey(KeyCode.K))
-            MoneyManager.Instance.CollectX(5);
+        SpawnFromQueue(3);
+        if (LevelManager.Instance.IsWaveFinished())
+            MoneyManager.Instance.CollectX(3);
 
         //Update tower height
         Tower.transform.position = new Vector3(
@@ -89,8 +91,8 @@ public class GameManager : SingletonClass<GameManager>
         if(closestShroom < 16)
             return 0.25f;
         if(closestShroom < 32)
-            return 0.65f;
-        if(closestShroom < 96)
+            return 0.6f;
+        if(closestShroom < 64)
             return 1;
         return 2;
     }

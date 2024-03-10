@@ -16,9 +16,9 @@ MonoBehaviour:
   bulletPrefab: {fileID: 551972521905007305, guid: 8f10f1524f695864fbb80d2cbebef4ff, type: 3}
   ammoPerPack: 1
   costPerPack: 20
-  currentAmmo: 100
+  currentAmmo: 0
   shootCooldown: 1.5
-  currentCooldown: -3.9666219
+  currentCooldown: -1.48056
   shakeMultiplier: 1
   accuracy: 0.98
   bulletSpeed: 35

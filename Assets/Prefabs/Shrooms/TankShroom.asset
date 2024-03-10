@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d140df65d33f88649bf4f4a5a7a69ef0, type: 3}
-  m_Name: 1_6Shroom
+  m_Name: TankShroom
   m_EditorClassIdentifier: 
   shroomName: hrib
-  sprite: {fileID: 21300000, guid: 2efcc1efb639a7348abe721356090fe4, type: 3}
-  health: 1
-  speed: 5
-  value: 6
-  type: 2
-  projectilePrefab: {fileID: 0}
+  sprite: {fileID: 21300000, guid: f01e47c65e1a1ec4a8630ff993f5b69f, type: 3}
+  health: 4
+  speed: 0
+  value: 4
+  type: 0
